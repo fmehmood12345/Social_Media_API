@@ -1,0 +1,1 @@
+ruff #An extremely fast Python linter and code formatter and import sorting tool - warns about issues and formatting in code example importing structure
