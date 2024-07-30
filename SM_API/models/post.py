@@ -1,6 +1,6 @@
+from pydantic import BaseModel  # BaseModel is a class used to define a model. A model is used to validate data
+
 """Models used to validate incoming and outgoing data"""
-
-
 class UserPostIn(BaseModel):  # Inheriting form BaseModel
 
     # Defining fields in this model
