@@ -1,5 +1,5 @@
 from pydantic import BaseModel  # BaseModel is a class used to define a model. A model is used to validate data
-
+from typing import List
 """Models used to validate incoming and outgoing data"""
 
 
@@ -27,7 +27,7 @@ class Comment(CommentIn):
 # This model combines a post (UserPost) with its comments (list[CommentOut]).
 class UserPostWithComments(BaseModel):
     post: UserPost
-    comments: list[Comment]
+    comments: List[Comment]
 
     """
     The data structure of the response is essentially going to look like this:
