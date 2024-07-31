@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from SM_API.models.post import UserPost, UserPostIn, Comment, CommentIn
+from SM_API.models.post import UserPost, UserPostIn, Comment, CommentIn, UserPostWithComments
 
 router = APIRouter()  # fastAPI app
 
@@ -8,6 +8,7 @@ router = APIRouter()  # fastAPI app
 
 post_table = {}
 comment_table = {}
+
 
 def find_post(post_id: int):
     return post_table.get(post_id)
@@ -39,14 +40,27 @@ async def create_comment(comment: CommentIn):
     data = comment.dict()  # defined structure of body
     last_record_id = len(comment_table)  # defined post id
     new_comment = {**data,
-                "id": last_record_id}  # Creates a new dictionary with all the filed and values of the dictionary data and contain their relative ids
+                   "id": last_record_id}  # Creates a new dictionary with all the filed and values of the dictionary data and contain their relative ids
     comment_table[last_record_id] = new_comment
     return new_comment
+
 
 @router.get("/post/{post_id}/comment", response_model=List[Comment])
 async def get_comments_on_post(post_id: int):
     return [comment for comment in comment_table.values() if comment["post_ID"] == post_id]
 
+
+@router.get("/post/{post_id}", response_model=UserPostWithComments)
+async def get_post_with_comments(post_id: int):
+    post = find_post(post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    return {
+        "post": post,
+        "comments": await get_comments_on_post(post_id)
+        # await ensures the get_comments_on_post function finishes running, and we get a return before this line complete running
+    }
 
 # # Get decorator - if a client makes a request to the / endpoint, then the return of the root function will be returned
 # @app.get("/")
@@ -55,4 +69,3 @@ async def get_comments_on_post(post_id: int):
 
 
 # An API router is basically the same as a fastAPI app however, instead of running on its own, it can be included into an existing app.
-
