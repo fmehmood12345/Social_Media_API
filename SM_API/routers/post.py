@@ -15,7 +15,7 @@ def find_post(post_id: int):
 
 
 # Create post endpoint
-@router.post("/post", response_model=UserPost, status_code=201)
+@router.post("/create_post", response_model=UserPost, status_code=201)
 async def create_post(post: UserPostIn):
     # data = dict(post)
     data = post.dict()  # defined structure of body
@@ -26,12 +26,12 @@ async def create_post(post: UserPostIn):
     return new_post
 
 
-@router.get("/post", response_model=List[UserPost])  # Use List from typing
+@router.get("/get_all_posts", response_model=List[UserPost])  # Use List from typing
 async def get_all_posts():
     return list(post_table.values())
 
 
-@router.post("/comment", response_model=Comment, status_code=201)
+@router.post("/create_comment", response_model=Comment, status_code=201)
 async def create_comment(comment: CommentIn):
     post = find_post(comment.post_ID)
     if not post:
@@ -45,12 +45,12 @@ async def create_comment(comment: CommentIn):
     return new_comment
 
 
-@router.get("/post/{post_id}/comment", response_model=List[Comment])
+@router.get("/post/{post_id}/get_all_comments", response_model=List[Comment])
 async def get_comments_on_post(post_id: int):
     return [comment for comment in comment_table.values() if comment["post_ID"] == post_id]
 
 
-@router.get("/post/{post_id}", response_model=UserPostWithComments)
+@router.get("/get_posts_with_comments/{post_id}", response_model=UserPostWithComments)
 async def get_post_with_comments(post_id: int):
     post = find_post(post_id)
     if not post:
