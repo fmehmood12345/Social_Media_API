@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
-from SM_API.main import app
-from SM_API.routers.post import post_table, comment_table
+from src.main import app
+from src.routers.post import post_table, comment_table
 
 """The purpose of a fixture is so that the code inside the fixture can be used with any test without having repetition."""
 
